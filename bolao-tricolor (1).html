@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bolão Tricolor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --grenà: #8B1A2C;
+    --grenà-dark: #6B1220;
+    --grenà-light: #C4243F;
+    --verde: #1B6B3A;
+    --verde-light: #2A9B56;
+    --verde-neon: #39D46A;
+    --branco: #F5F0E8;
+    --escuro: #0E0E0F;
+    --escuro2: #161618;
+    --escuro3: #1E1E21;
+    --escuro4: #26262B;
+    --cinza: #3A3A40;
+    --cinza2: #52525A;
+    --cinza3: #7A7A85;
+    --texto: #E8E3D8;
+    --texto2: #B0AAA0;
+    --ouro: #C9A227;
+    --ouro-light: #F0C84A;
+    --danger: #E23A3A;
+    --success: #2ECC71;
+    --warning: #F39C12;
+    --info: #3498DB;
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-lg: 18px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--escuro);
+    color: var(--texto);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.04em; }
+
+  /* SCREENS */
+  .screen { display: none; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* NAV */
+  .topbar {
+    background: var(--escuro2);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-logo { font-family: 'Bebas Neue'; font-size: 22px; letter-spacing: 2px; }
+  .topbar-logo span:first-child { color: var(--grenà-light); }
+  .topbar-logo span:last-child { color: var(--verde-neon); }
+  .topbar-actions { display: flex; gap: 8px; }
+
+  /* BOTTOM NAV */
+  .bottomnav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--escuro2);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 4px 8px;
+    gap: 4px;
+    cursor: pointer;
+    color: var(--cinza3);
+    font-size: 10px;
+    font-weight: 500;
+    transition: color 0.2s;
+    border: none;
+    background: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-item.active { color: var(--verde-neon); }
+  .nav-item svg { width: 22px; height: 22px; }
+
+  /* CONTENT AREA */
+  .content { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+
+  /* LANDING */
+  #landing { background: var(--escuro); }
+  .hero {
+    background: linear-gradient(160deg, var(--grenà-dark) 0%, var(--escuro) 50%, var(--verde) 100%);
+    padding: 60px 24px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(57,212,106,0.12);
+    border: 1px solid rgba(57,212,106,0.3);
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--verde-neon);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 56px; line-height: 0.95; margin-bottom: 16px; }
+  .hero h1 .red { color: var(--grenà-light); }
+  .hero h1 .green { color: var(--verde-neon); }
+  .hero p { color: var(--texto2); font-size: 16px; line-height: 1.6; margin-bottom: 32px; max-width: 320px; margin-left: auto; margin-right: auto; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--grenà-light);
+    color: #fff;
+    font-family: 'DM Sans';
+    font-size: 15px;
+    font-weight: 600;
+    padding: 14px 28px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    text-decoration: none;
+  }
+  .btn-primary:hover { background: var(--grenà); }
+  .btn-primary:active { transform: scale(0.97); }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--texto);
+    font-family: 'DM Sans';
+    font-size: 15px;
+    font-weight: 500;
+    padding: 13px 28px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+  .btn-secondary:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.05); }
+  .btn-green {
+    background: var(--verde);
+    color: #fff;
+    font-family: 'DM Sans';
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-green:hover { background: var(--verde-light); }
+  .btn-sm {
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .btn-sm:active { opacity: 0.7; }
+  .landing-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+  .features-section { padding: 40px 20px; }
+  .section-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--verde-neon); margin-bottom: 8px; }
+  .section-title { font-size: 32px; margin-bottom: 24px; }
+  .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .feature-card {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+  }
+  .feature-icon { font-size: 24px; margin-bottom: 10px; }
+  .feature-card h3 { font-size: 16px; margin-bottom: 6px; font-family: 'DM Sans'; font-weight: 600; }
+  .feature-card p { font-size: 12px; color: var(--texto2); line-height: 1.5; }
+
+  /* AUTH */
+  #auth { background: var(--escuro); justify-content: center; align-items: center; padding: 24px; }
+  .auth-box {
+    background: var(--escuro2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg);
+    padding: 32px 24px;
+    width: 100%;
+    max-width: 400px;
+  }
+  .auth-logo { text-align: center; margin-bottom: 28px; }
+  .auth-logo h1 { font-size: 36px; }
+  .auth-tabs { display: flex; gap: 0; margin-bottom: 24px; background: var(--escuro3); border-radius: var(--radius-sm); padding: 4px; }
+  .auth-tab { flex: 1; padding: 9px; text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px; color: var(--cinza3); transition: all 0.2s; border: none; background: none; }
+  .auth-tab.active { background: var(--grenà-light); color: #fff; }
+  .form-group { margin-bottom: 14px; }
+  .form-label { font-size: 12px; font-weight: 600; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
+  .form-input {
+    width: 100%;
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    color: var(--texto);
+    font-family: 'DM Sans';
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--verde-neon); }
+  .form-input::placeholder { color: var(--cinza2); }
+  .form-submit {
+    width: 100%;
+    background: var(--grenà-light);
+    color: #fff;
+    font-family: 'DM Sans';
+    font-size: 15px;
+    font-weight: 700;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--grenà); }
+
+  /* DASHBOARD */
+  #dashboard { background: var(--escuro); }
+  .welcome-bar { padding: 20px 20px 16px; }
+  .welcome-greeting { font-size: 13px; color: var(--texto2); margin-bottom: 4px; }
+  .welcome-name { font-size: 26px; line-height: 1; }
+  .welcome-name span { color: var(--grenà-light); }
+  .stats-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 0 20px 20px; }
+  .stat-card {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat-value { font-family: 'Bebas Neue'; font-size: 28px; line-height: 1; }
+  .stat-label { font-size: 10px; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+  .stat-card.grenà .stat-value { color: var(--grenà-light); }
+  .stat-card.verde .stat-value { color: var(--verde-neon); }
+  .stat-card.ouro .stat-value { color: var(--ouro-light); }
+
+  .section-header { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; margin-bottom: 12px; }
+  .section-h { font-size: 20px; }
+  .see-all { font-size: 12px; color: var(--verde-neon); font-weight: 600; cursor: pointer; border: none; background: none; }
+
+  /* CARDS DE PARTIDA */
+  .matches-scroll { display: flex; gap: 12px; padding: 0 20px; overflow-x: auto; scrollbar-width: none; margin-bottom: 24px; }
+  .matches-scroll::-webkit-scrollbar { display: none; }
+  .match-card {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 16px;
+    min-width: 220px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .match-card:hover { border-color: rgba(57,212,106,0.3); }
+  .match-card.active-bet { border-color: rgba(201,162,39,0.5); }
+  .match-league { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--cinza3); margin-bottom: 10px; }
+  .match-teams { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+  .match-team { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .team-shield { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+  .match-team-name { font-size: 11px; font-weight: 600; text-align: center; }
+  .match-vs { font-family: 'Bebas Neue'; font-size: 18px; color: var(--cinza2); }
+  .match-score { font-family: 'Bebas Neue'; font-size: 26px; text-align: center; }
+  .match-time { font-size: 11px; color: var(--texto2); text-align: center; }
+  .match-status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .status-agendada { background: rgba(52,152,219,0.15); color: var(--info); }
+  .status-encerrada { background: rgba(46,204,113,0.1); color: var(--success); }
+  .status-apostas { background: rgba(201,162,39,0.15); color: var(--ouro-light); }
+  .match-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+  .my-bet-badge { font-size: 10px; font-weight: 700; color: var(--ouro-light); background: rgba(201,162,39,0.12); padding: 3px 8px; border-radius: 999px; }
+
+  /* RANKING */
+  .ranking-list { padding: 0 20px; }
+  .ranking-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .ranking-item:hover { border-color: rgba(255,255,255,0.12); }
+  .ranking-item.highlight { border-color: rgba(201,162,39,0.4); background: rgba(201,162,39,0.04); }
+  .rank-pos { font-family: 'Bebas Neue'; font-size: 22px; width: 28px; text-align: center; color: var(--cinza3); }
+  .rank-pos.gold { color: var(--ouro-light); }
+  .rank-pos.silver { color: #C0C0C0; }
+  .rank-pos.bronze { color: #CD7F32; }
+  .rank-avatar { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  .rank-info { flex: 1; }
+  .rank-name { font-size: 14px; font-weight: 600; }
+  .rank-sub { font-size: 11px; color: var(--texto2); margin-top: 1px; }
+  .rank-pts { text-align: right; }
+  .rank-pts-val { font-family: 'Bebas Neue'; font-size: 22px; color: var(--verde-neon); }
+  .rank-pts-label { font-size: 10px; color: var(--texto2); text-transform: uppercase; }
+
+  /* GRUPOS */
+  .groups-list { padding: 0 20px; }
+  .group-card {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .group-card:hover { border-color: rgba(255,255,255,0.15); }
+  .group-header { padding: 16px; display: flex; align-items: center; gap: 12px; }
+  .group-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .group-info { flex: 1; }
+  .group-name { font-size: 16px; font-weight: 700; }
+  .group-meta { font-size: 12px; color: var(--texto2); margin-top: 2px; }
+  .group-stats { display: flex; border-top: 1px solid rgba(255,255,255,0.05); }
+  .group-stat { flex: 1; padding: 10px; text-align: center; }
+  .group-stat:not(:last-child) { border-right: 1px solid rgba(255,255,255,0.05); }
+  .group-stat-val { font-family: 'Bebas Neue'; font-size: 20px; }
+  .group-stat-label { font-size: 9px; color: var(--texto2); text-transform: uppercase; letter-spacing: 0.5px; }
+  .group-badge { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+  .badge-admin { background: rgba(139,26,44,0.3); color: var(--grenà-light); }
+  .badge-membro { background: rgba(27,107,58,0.3); color: var(--verde-neon); }
+
+  /* PALPITES */
+  .bet-screen { padding: 20px; }
+  .bet-match-header {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .bet-league-info { font-size: 11px; color: var(--cinza3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; text-align: center; }
+  .bet-teams { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .bet-team { text-align: center; flex: 1; }
+  .bet-shield { font-size: 40px; margin-bottom: 6px; }
+  .bet-team-name { font-size: 14px; font-weight: 700; }
+  .bet-vs { font-family: 'Bebas Neue'; font-size: 28px; color: var(--cinza2); }
+  .bet-datetime { text-align: center; margin-top: 12px; font-size: 12px; color: var(--texto2); }
+  .bet-deadline-bar {
+    background: rgba(201,162,39,0.1);
+    border: 1px solid rgba(201,162,39,0.3);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: var(--ouro-light);
+    font-weight: 500;
+  }
+  .score-input-area { margin-bottom: 24px; }
+  .score-input-label { font-size: 13px; font-weight: 600; text-align: center; color: var(--texto2); margin-bottom: 14px; }
+  .score-inputs { display: flex; align-items: center; justify-content: center; gap: 16px; }
+  .score-input-group { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .score-input-name { font-size: 12px; color: var(--texto2); }
+  .score-number { display: flex; align-items: center; gap: 8px; }
+  .score-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: var(--escuro4);
+    color: var(--texto);
+    font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-weight: 300;
+  }
+  .score-btn:hover { background: var(--cinza); }
+  .score-display {
+    font-family: 'Bebas Neue';
+    font-size: 48px;
+    min-width: 50px;
+    text-align: center;
+    color: var(--texto);
+    line-height: 1;
+  }
+  .score-x { font-family: 'Bebas Neue'; font-size: 32px; color: var(--cinza2); }
+  .bet-submit { width: 100%; }
+
+  /* PAGAMENTOS */
+  .payment-section { padding: 20px; }
+  .pix-box {
+    background: var(--escuro3);
+    border: 1px solid rgba(27,107,58,0.4);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .pix-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--verde-neon); font-weight: 600; margin-bottom: 8px; }
+  .pix-key { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .pix-key-type { font-size: 11px; color: var(--texto2); }
+  .pix-amount { font-family: 'Bebas Neue'; font-size: 42px; color: var(--verde-neon); margin: 12px 0 4px; }
+  .pix-round { font-size: 12px; color: var(--texto2); }
+  .payment-history { }
+  .payment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+  }
+  .payment-item-left { display: flex; align-items: center; gap: 10px; }
+  .payment-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; }
+  .payment-name { font-size: 14px; font-weight: 600; }
+  .payment-round { font-size: 11px; color: var(--texto2); }
+  .status-pill { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .pill-pago { background: rgba(46,204,113,0.1); color: var(--success); }
+  .pill-pendente { background: rgba(243,156,18,0.1); color: var(--warning); }
+  .pill-rejeitado { background: rgba(226,58,58,0.1); color: var(--danger); }
+
+  /* ADMIN */
+  .admin-section { padding: 20px; }
+  .admin-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .admin-stat {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .admin-stat-icon { font-size: 24px; margin-bottom: 8px; }
+  .admin-stat-val { font-family: 'Bebas Neue'; font-size: 32px; line-height: 1; }
+  .admin-stat-label { font-size: 11px; color: var(--texto2); margin-top: 2px; }
+  .admin-action-list { display: flex; flex-direction: column; gap: 10px; }
+  .admin-action {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .admin-action:hover { border-color: rgba(255,255,255,0.15); }
+  .admin-action-left { display: flex; align-items: center; gap: 12px; }
+  .admin-action-icon { font-size: 20px; }
+  .admin-action-title { font-size: 14px; font-weight: 600; }
+  .admin-action-sub { font-size: 11px; color: var(--texto2); }
+  .admin-action-arrow { color: var(--cinza3); font-size: 18px; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--escuro2);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    width: 100%;
+    max-width: 480px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 24px 20px 40px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .modal-handle { width: 40px; height: 4px; background: rgba(255,255,255,0.15); border-radius: 2px; margin: 0 auto 20px; }
+  .modal-title { font-size: 24px; margin-bottom: 16px; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--escuro4);
+    border: 1px solid rgba(57,212,106,0.4);
+    border-radius: 999px;
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--verde-neon);
+    z-index: 300;
+    opacity: 0;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* CHIPS */
+  .chip { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 16px 0; }
+
+  /* INPUT + BUTTON ROW */
+  .input-row { display: flex; gap: 8px; }
+  .input-row .form-input { flex: 1; }
+
+  /* SCROLLABLE */
+  .h-scroll { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; }
+  .h-scroll::-webkit-scrollbar { display: none; }
+
+  /* CHIP TABS */
+  .chip-tabs { display: flex; gap: 8px; margin-bottom: 16px; overflow-x: auto; scrollbar-width: none; }
+  .chip-tabs::-webkit-scrollbar { display: none; }
+  .chip-tab {
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: var(--texto2);
+    transition: all 0.2s;
+  }
+  .chip-tab.active { background: var(--grenà-light); color: #fff; border-color: var(--grenà-light); }
+
+  /* UPLOAD */
+  .upload-area {
+    border: 2px dashed rgba(255,255,255,0.15);
+    border-radius: var(--radius);
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .upload-area:hover { border-color: var(--verde-neon); }
+  .upload-icon { font-size: 36px; margin-bottom: 10px; }
+  .upload-text { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .upload-sub { font-size: 12px; color: var(--texto2); }
+
+  /* BACK BTN */
+  .back-btn {
+    background: none;
+    border: none;
+    color: var(--texto2);
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* HIGHLIGHTS */
+  .highlight-card {
+    background: linear-gradient(135deg, var(--grenà-dark), var(--escuro3));
+    border: 1px solid rgba(139,26,44,0.4);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 0 20px 20px;
+  }
+  .highlight-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .highlight-val { font-family: 'Bebas Neue'; font-size: 42px; color: #fff; line-height: 1; }
+  .highlight-sub { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* REGRAS */
+  .rules-card {
+    background: var(--escuro3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin: 0 20px 20px;
+  }
+  .rule-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; }
+  .rule-item:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .rule-label { font-size: 13px; color: var(--texto2); }
+  .rule-pts { font-family: 'Bebas Neue'; font-size: 20px; color: var(--ouro-light); }
+
+  /* RESPONSIVO */
+  @media (min-width: 480px) {
+    .feature-grid { grid-template-columns: repeat(3, 1fr); }
+    .stats-strip { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* TRANSITIONS */
+  .screen { animation: fadeIn 0.2s ease; }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==============================
+     LANDING PAGE
+     ============================== -->
+<div id="landing" class="screen active">
+  <div class="hero">
+    <div class="hero-badge">⚽ Temporada 2025</div>
+    <h1>BOLÃO<br><span class="red">TRI</span><span class="green">COLOR</span></h1>
+    <p>Organize seus palpites, acompanhe o ranking e dispute o prêmio com seus amigos.</p>
+    <div class="landing-cta">
+      <button class="btn-primary" onclick="showScreen('auth')">Entrar no Bolão</button>
+      <button class="btn-secondary" onclick="showScreen('auth')">Criar grupo</button>
+    </div>
+  </div>
+
+  <div class="features-section">
+    <div class="section-label">Por que usar</div>
+    <h2 class="section-title">Feito pra torcida de verdade</h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Palpites em tempo real</h3>
+        <p>Placar exato com bloqueio automático antes do jogo</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏆</div>
+        <h3>Ranking instantâneo</h3>
+        <p>Pontuação automática após o apito final</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Controle financeiro</h3>
+        <p>Pagamento via Pix com aprovação pelo admin</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>Grupos privados</h3>
+        <p>Acesso por link ou código de convite</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Estatísticas</h3>
+        <p>Histórico completo de palpites e temporadas</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>100% mobile</h3>
+        <p>Feito para celular, funciona no navegador</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 0 20px 40px; text-align: center;">
+    <button class="btn-primary" style="width:100%;" onclick="showScreen('auth')">Começar agora — é grátis</button>
+    <p style="font-size:12px; color:var(--texto2); margin-top:12px;">Já tem uma conta? <span style="color:var(--verde-neon); cursor:pointer;" onclick="showScreen('auth')">Fazer login</span></p>
+  </div>
+</div>
+
+<!-- ==============================
+     AUTH
+     ============================== -->
+<div id="auth" class="screen">
+  <div style="position:absolute; top:16px; left:16px; z-index:10;">
+    <button class="back-btn" onclick="showScreen('landing')">←</button>
+  </div>
+  <div class="auth-box" style="margin:auto; position:relative; z-index:1; top: 10vh;">
+    <div class="auth-logo">
+      <h1><span style="color:var(--grenà-light)">TRI</span><span style="color:var(--verde-neon)">COLOR</span></h1>
+      <p style="font-size:13px; color:var(--texto2); font-family:'DM Sans'; margin-top:4px;">Bolão Privado de Futebol</p>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="authTab('login')">Entrar</button>
+      <button class="auth-tab" id="tab-signup" onclick="authTab('signup')">Cadastrar</button>
+    </div>
+    <div id="login-form">
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input class="form-input" type="email" placeholder="seu@email.com" value="joao@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input class="form-input" type="password" placeholder="••••••••" value="123456">
+      </div>
+      <p style="font-size:12px; color:var(--verde-neon); text-align:right; cursor:pointer; margin-bottom:16px;">Esqueci a senha</p>
+      <button class="form-submit" onclick="doLogin()">Entrar</button>
+    </div>
+    <div id="signup-form" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">Nome completo</label>
+        <input class="form-input" type="text" placeholder="João Silva">
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail</label>
+        <input class="form-input" type="email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp</label>
+        <input class="form-input" type="tel" placeholder="(35) 99999-9999">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Senha</label>
+        <input class="form-input" type="password" placeholder="Mínimo 8 caracteres">
+      </div>
+      <button class="form-submit" onclick="doLogin()">Criar conta</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     APP PRINCIPAL
+     ============================== -->
+<div id="app" class="screen">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <span>TRI</span><span>COLOR</span>
+    </div>
+    <div class="topbar-actions">
+      <button style="background:var(--escuro3); border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:36px; height:36px; color:var(--texto2); font-size:18px; cursor:pointer; display:flex; align-items:center; justify-content:center;" onclick="openModal('notify-modal')">🔔</button>
+      <div onclick="showScreen('auth')" style="width:36px; height:36px; background:var(--grenà); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; cursor:pointer;">JO</div>
+    </div>
+  </div>
+
+  <!-- CONTENT TABS -->
+  <div class="content" id="main-content">
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="welcome-bar">
+        <div class="welcome-greeting">Bom dia,</div>
+        <div class="welcome-name">João <span>Oliveira</span> ⚽</div>
+      </div>
+
+      <div class="stats-strip">
+        <div class="stat-card grenà">
+          <div class="stat-value">142</div>
+          <div class="stat-label">Pts Totais</div>
+        </div>
+        <div class="stat-card verde">
+          <div class="stat-value">3°</div>
+          <div class="stat-label">Posição</div>
+        </div>
+        <div class="stat-card ouro">
+          <div class="stat-value">R$80</div>
+          <div class="stat-label">Premiação</div>
+        </div>
+      </div>
+
+      <div class="highlight-card">
+        <div class="highlight-title">💰 Prêmio acumulado da rodada</div>
+        <div class="highlight-val">R$ 320,00</div>
+        <div class="highlight-sub">16 participantes pagos · Rodada 8</div>
+      </div>
+
+      <div class="section-header">
+        <h2 class="section-h">Próximos Jogos</h2>
+        <button class="see-all" onclick="switchTab('partidas')">Ver todos →</button>
+      </div>
+      <div class="matches-scroll">
+        <div class="match-card active-bet" onclick="openModal('bet-modal')">
+          <div class="match-league">🏆 Brasileirão Série A</div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(139,26,44,0.2)">🔴</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div class="match-vs">VS</div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(0,0,128,0.2)">🔵</div>
+              <div class="match-team-name">Botafogo</div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span class="match-status status-apostas">🟡 Palpites abertos</span>
+            <span class="my-bet-badge">Meu: 2x1</span>
+          </div>
+          <div class="match-time" style="margin-top:8px;">Sáb, 22/Jun · 16h00</div>
+        </div>
+
+        <div class="match-card" onclick="openModal('bet-modal')">
+          <div class="match-league">🏆 Brasileirão Série A</div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(0,128,0,0.2)">🟢</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div class="match-vs">VS</div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(255,0,0,0.15)">🔴</div>
+              <div class="match-team-name">Flamengo</div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span class="match-status status-agendada">🔵 Agendado</span>
+            <span style="font-size:11px; color:var(--cinza3);">Sem palpite</span>
+          </div>
+          <div class="match-time" style="margin-top:8px;">Dom, 23/Jun · 18h30</div>
+        </div>
+
+        <div class="match-card">
+          <div class="match-league">🏆 Copa do Brasil</div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(139,26,44,0.2)">🔴</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div class="match-vs">2x0</div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(128,0,128,0.15)">🟣</div>
+              <div class="match-team-name">Cruzeiro</div>
+            </div>
+          </div>
+          <div class="match-footer">
+            <span class="match-status status-encerrada">✅ Encerrado</span>
+            <span class="my-bet-badge" style="background:rgba(46,204,113,0.12); color:var(--success);">✓ 5 pts</span>
+          </div>
+          <div class="match-time" style="margin-top:8px;">Qua, 19/Jun · 21h30</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <h2 class="section-h">Ranking Geral</h2>
+        <button class="see-all" onclick="switchTab('ranking')">Ver todos →</button>
+      </div>
+      <div class="ranking-list">
+        <div class="ranking-item">
+          <div class="rank-pos gold">1</div>
+          <div class="rank-avatar" style="background:rgba(201,162,39,0.2); color:var(--ouro-light);">MA</div>
+          <div class="rank-info">
+            <div class="rank-name">Marcos Andrade</div>
+            <div class="rank-sub">7 exatos · 5 vitórias</div>
+          </div>
+          <div class="rank-pts">
+            <div class="rank-pts-val">186</div>
+            <div class="rank-pts-label">pts</div>
+          </div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos silver">2</div>
+          <div class="rank-avatar" style="background:rgba(100,100,200,0.2); color:#aab;">LC</div>
+          <div class="rank-info">
+            <div class="rank-name">Luana Costa</div>
+            <div class="rank-sub">6 exatos · 4 vitórias</div>
+          </div>
+          <div class="rank-pts">
+            <div class="rank-pts-val">171</div>
+            <div class="rank-pts-label">pts</div>
+          </div>
+        </div>
+        <div class="ranking-item highlight">
+          <div class="rank-pos bronze">3</div>
+          <div class="rank-avatar" style="background:rgba(139,26,44,0.3); color:var(--grenà-light);">JO</div>
+          <div class="rank-info">
+            <div class="rank-name">João Oliveira <span style="font-size:10px; color:var(--ouro-light);">👤 você</span></div>
+            <div class="rank-sub">5 exatos · 3 vitórias</div>
+          </div>
+          <div class="rank-pts">
+            <div class="rank-pts-val">142</div>
+            <div class="rank-pts-label">pts</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PARTIDAS TAB -->
+    <div id="tab-partidas" class="tab-content" style="display:none; padding-top:16px;">
+      <div style="padding:0 20px 16px;">
+        <div class="chip-tabs">
+          <button class="chip-tab active">Abertas</button>
+          <button class="chip-tab">Encerradas</button>
+          <button class="chip-tab">Todas</button>
+        </div>
+      </div>
+      <div style="padding: 0 20px; display:flex; flex-direction:column; gap:12px;">
+        <div class="match-card" style="min-width:unset;" onclick="openModal('bet-modal')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="match-league" style="margin:0;">🏆 Brasileirão Série A · Rodada 8</div>
+            <span class="match-status status-apostas">Apostas abertas</span>
+          </div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(139,26,44,0.2); font-size:28px; width:48px; height:48px;">🔴</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div>
+              <div class="match-vs">VS</div>
+              <div style="font-size:11px; color:var(--texto2); text-align:center;">22/Jun 16h</div>
+            </div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(0,0,128,0.2); font-size:28px; width:48px; height:48px;">🔵</div>
+              <div class="match-team-name">Botafogo</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--texto2);">⏱ Fecha em <strong style="color:var(--ouro-light);">1h 23min</strong></span>
+            <span class="my-bet-badge">Meu palpite: 2x1</span>
+          </div>
+        </div>
+
+        <div class="match-card" style="min-width:unset;" onclick="openModal('bet-modal')">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="match-league" style="margin:0;">🏆 Brasileirão Série A · Rodada 8</div>
+            <span class="match-status status-agendada">Agendado</span>
+          </div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(0,128,0,0.15); font-size:28px; width:48px; height:48px;">🟢</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div>
+              <div class="match-vs">VS</div>
+              <div style="font-size:11px; color:var(--texto2); text-align:center;">23/Jun 18h</div>
+            </div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(255,0,0,0.1); font-size:28px; width:48px; height:48px;">🔴</div>
+              <div class="match-team-name">Flamengo</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--texto2);">⏱ Fecha em <strong style="color:var(--verde-neon);">22h 10min</strong></span>
+            <button class="btn-sm" style="background:var(--grenà-light); color:#fff;" onclick="event.stopPropagation(); openModal('bet-modal')">Dar palpite</button>
+          </div>
+        </div>
+
+        <div class="match-card" style="min-width:unset; opacity:0.75;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div class="match-league" style="margin:0;">🏆 Copa do Brasil</div>
+            <span class="match-status status-encerrada">Encerrado</span>
+          </div>
+          <div class="match-teams">
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(139,26,44,0.2); font-size:28px; width:48px; height:48px;">🔴</div>
+              <div class="match-team-name">Fluminense</div>
+            </div>
+            <div>
+              <div style="font-family:'Bebas Neue'; font-size:36px; text-align:center;">2 x 0</div>
+              <div style="font-size:11px; color:var(--texto2); text-align:center;">Encerrado</div>
+            </div>
+            <div class="match-team">
+              <div class="team-shield" style="background:rgba(128,0,128,0.15); font-size:28px; width:48px; height:48px;">🟣</div>
+              <div class="match-team-name">Cruzeiro</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:12px; color:var(--success);">✅ Você acertou o placar!</span>
+            <span class="my-bet-badge" style="background:rgba(46,204,113,0.12); color:var(--success);">+5 pontos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RANKING TAB -->
+    <div id="tab-ranking" class="tab-content" style="display:none; padding-top:16px;">
+      <div style="padding:0 20px 16px;">
+        <div class="chip-tabs">
+          <button class="chip-tab active">Geral</button>
+          <button class="chip-tab">Rodada</button>
+          <button class="chip-tab">Temporada</button>
+        </div>
+      </div>
+      <div style="padding:0 20px 12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:12px; color:var(--texto2);">Bolão da Resenha</div>
+          <div style="font-size:20px; font-family:'Bebas Neue';">Rodada 8 · 16 jogadores</div>
+        </div>
+        <button class="btn-sm" style="background:var(--escuro3); color:var(--texto2); border:1px solid rgba(255,255,255,0.1);">📤 Compartilhar</button>
+      </div>
+      <div class="ranking-list">
+        <div class="ranking-item">
+          <div class="rank-pos gold">1</div>
+          <div class="rank-avatar" style="background:rgba(201,162,39,0.2); color:var(--ouro-light);">MA</div>
+          <div class="rank-info"><div class="rank-name">Marcos Andrade</div><div class="rank-sub">7 exatos · R$160 ganhos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">186</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos silver">2</div>
+          <div class="rank-avatar" style="background:rgba(100,100,200,0.2); color:#aab;">LC</div>
+          <div class="rank-info"><div class="rank-name">Luana Costa</div><div class="rank-sub">6 exatos · R$80 ganhos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">171</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item highlight">
+          <div class="rank-pos bronze">3</div>
+          <div class="rank-avatar" style="background:rgba(139,26,44,0.3); color:var(--grenà-light);">JO</div>
+          <div class="rank-info"><div class="rank-name">João Oliveira 👤</div><div class="rank-sub">5 exatos · R$40 ganhos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">142</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos" style="color:var(--cinza3);">4</div>
+          <div class="rank-avatar" style="background:rgba(52,152,219,0.2); color:#7ab;">RF</div>
+          <div class="rank-info"><div class="rank-name">Rafael Figueiredo</div><div class="rank-sub">4 exatos · R$0 ganhos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">128</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos" style="color:var(--cinza3);">5</div>
+          <div class="rank-avatar" style="background:rgba(46,204,113,0.15); color:#5d5;">PS</div>
+          <div class="rank-info"><div class="rank-name">Paula Santos</div><div class="rank-sub">4 exatos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">119</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos" style="color:var(--cinza3);">6</div>
+          <div class="rank-avatar" style="background:rgba(243,156,18,0.15); color:#ea8;">BM</div>
+          <div class="rank-info"><div class="rank-name">Bruno Melo</div><div class="rank-sub">3 exatos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">104</div><div class="rank-pts-label">pts</div></div>
+        </div>
+        <div class="ranking-item">
+          <div class="rank-pos" style="color:var(--cinza3);">7</div>
+          <div class="rank-avatar" style="background:rgba(200,100,200,0.15); color:#c8a;">CR</div>
+          <div class="rank-info"><div class="rank-name">Carla Reis</div><div class="rank-sub">2 exatos</div></div>
+          <div class="rank-pts"><div class="rank-pts-val">92</div><div class="rank-pts-label">pts</div></div>
+        </div>
+      </div>
+      <div style="margin:16px 20px 0;">
+        <div class="rules-card">
+          <div style="font-size:16px; font-family:'Bebas Neue'; margin-bottom:10px;">⚡ Regras de Pontuação</div>
+          <div class="rule-item"><span class="rule-label">Placar exato</span><span class="rule-pts">5 pts</span></div>
+          <div class="rule-item"><span class="rule-label">Vencedor ou empate</span><span class="rule-pts">2 pts</span></div>
+          <div class="rule-item"><span class="rule-label">Gols de um time</span><span class="rule-pts">+1 pt</span></div>
+          <div class="rule-item"><span class="rule-label">Rodada perfeita</span><span class="rule-pts" style="color:var(--grenà-light);">+3 pts</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRUPOS TAB -->
+    <div id="tab-grupos" class="tab-content" style="display:none; padding-top:16px;">
+      <div style="padding:0 20px 16px; display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-size:22px; font-family:'Bebas Neue';">Meus Grupos</h2>
+        <button class="btn-sm" style="background:var(--grenà-light); color:#fff;" onclick="openModal('new-group-modal')">+ Criar</button>
+      </div>
+
+      <div style="padding:0 20px 16px;">
+        <div class="input-row">
+          <input class="form-input" placeholder="🔍 Código de convite..." style="flex:1;">
+          <button class="btn-green" style="border-radius:var(--radius-sm); padding:0 16px;">Entrar</button>
+        </div>
+      </div>
+
+      <div class="groups-list">
+        <div class="group-card" onclick="switchTab('admin')">
+          <div class="group-header">
+            <div class="group-icon" style="background:rgba(139,26,44,0.2);">⚽</div>
+            <div class="group-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="group-name">Bolão da Resenha</div>
+                <span class="group-badge badge-admin">Admin</span>
+              </div>
+              <div class="group-meta">Criado por você · Código: FLUSÃO23</div>
+            </div>
+          </div>
+          <div class="group-stats">
+            <div class="group-stat"><div class="group-stat-val" style="color:var(--verde-neon);">16</div><div class="group-stat-label">Membros</div></div>
+            <div class="group-stat"><div class="group-stat-val" style="color:var(--ouro-light);">R$320</div><div class="group-stat-label">Prêmio</div></div>
+            <div class="group-stat"><div class="group-stat-val">Rod. 8</div><div class="group-stat-label">Rodada</div></div>
+          </div>
+        </div>
+
+        <div class="group-card">
+          <div class="group-header">
+            <div class="group-icon" style="background:rgba(52,152,219,0.15);">🍺</div>
+            <div class="group-info">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <div class="group-name">Bar do Zé</div>
+                <span class="group-badge badge-membro">Membro</span>
+              </div>
+              <div class="group-meta">Admin: José Lima · Código: BARZÃO</div>
+            </div>
+          </div>
+          <div class="group-stats">
+            <div class="group-stat"><div class="group-stat-val" style="color:var(--verde-neon);">24</div><div class="group-stat-label">Membros</div></div>
+            <div class="group-stat"><div class="group-stat-val" style="color:var(--ouro-light);">R$480</div><div class="group-stat-label">Prêmio</div></div>
+            <div class="group-stat"><div class="group-stat-val">Rod. 8</div><div class="group-stat-label">Rodada</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGAMENTOS TAB -->
+    <div id="tab-pagamentos" class="tab-content" style="display:none; padding-top:16px;">
+      <div style="padding:0 20px 16px;">
+        <h2 style="font-size:22px; font-family:'Bebas Neue';">Pagamentos</h2>
+        <div style="font-size:12px; color:var(--texto2); margin-top:2px;">Bolão da Resenha · Rodada 8</div>
+      </div>
+
+      <div class="payment-section" style="padding-top:0;">
+        <div class="pix-box">
+          <div class="pix-label">✅ Pix do Administrador</div>
+          <div class="pix-key">joao.oliveira@email.com</div>
+          <div class="pix-key-type">Chave: E-mail</div>
+          <div class="pix-amount">R$ 20</div>
+          <div class="pix-round">por rodada</div>
+          <button class="btn-primary" style="margin-top:14px; font-size:13px; padding:10px 20px;" onclick="openModal('comprovante-modal')">📎 Enviar comprovante</button>
+        </div>
+
+        <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-size:15px; font-weight:700;">Meu status</div>
+          <span class="status-pill pill-pago">Pago ✓</span>
+        </div>
+
+        <div class="divider"></div>
+        <div style="font-size:13px; font-weight:700; color:var(--texto2); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">Todos os participantes</div>
+
+        <div class="payment-item">
+          <div class="payment-item-left">
+            <div class="payment-avatar" style="background:rgba(139,26,44,0.3); color:var(--grenà-light);">JO</div>
+            <div><div class="payment-name">João Oliveira</div><div class="payment-round">Rodada 8 · R$20</div></div>
+          </div>
+          <span class="status-pill pill-pago">Pago</span>
+        </div>
+        <div class="payment-item">
+          <div class="payment-item-left">
+            <div class="payment-avatar" style="background:rgba(201,162,39,0.2); color:var(--ouro-light);">MA</div>
+            <div><div class="payment-name">Marcos Andrade</div><div class="payment-round">Rodada 8 · R$20</div></div>
+          </div>
+          <span class="status-pill pill-pago">Pago</span>
+        </div>
+        <div class="payment-item">
+          <div class="payment-item-left">
+            <div class="payment-avatar" style="background:rgba(100,100,200,0.2); color:#aab;">LC</div>
+            <div><div class="payment-name">Luana Costa</div><div class="payment-round">Rodada 8 · R$20</div></div>
+          </div>
+          <span class="status-pill pill-pago">Pago</span>
+        </div>
+        <div class="payment-item">
+          <div class="payment-item-left">
+            <div class="payment-avatar" style="background:rgba(52,152,219,0.2); color:#7ab;">RF</div>
+            <div><div class="payment-name">Rafael Figueiredo</div><div class="payment-round">Rodada 8 · R$20</div></div>
+          </div>
+          <span class="status-pill pill-pendente">Pendente</span>
+        </div>
+        <div class="payment-item">
+          <div class="payment-item-left">
+            <div class="payment-avatar" style="background:rgba(46,204,113,0.15); color:#5d5;">PS</div>
+            <div><div class="payment-name">Paula Santos</div><div class="payment-round">Rodada 8 · R$20</div></div>
+          </div>
+          <span class="status-pill pill-rejeitado">Rejeitado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN TAB -->
+    <div id="tab-admin" class="tab-content" style="display:none; padding-top:16px;">
+      <div style="padding:0 20px 16px;">
+        <div style="font-size:11px; color:var(--grenà-light); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Painel Administrativo</div>
+        <h2 style="font-size:22px; font-family:'Bebas Neue';">Bolão da Resenha</h2>
+      </div>
+
+      <div class="admin-section" style="padding-top:0;">
+        <div class="admin-grid">
+          <div class="admin-stat">
+            <div class="admin-stat-icon">👥</div>
+            <div class="admin-stat-val" style="color:var(--verde-neon);">16</div>
+            <div class="admin-stat-label">Participantes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-icon">💰</div>
+            <div class="admin-stat-val" style="color:var(--ouro-light);">R$320</div>
+            <div class="admin-stat-label">Arrecadado</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-icon">⏳</div>
+            <div class="admin-stat-val" style="color:var(--warning);">3</div>
+            <div class="admin-stat-label">Pgtos. Pendentes</div>
+          </div>
+          <div class="admin-stat">
+            <div class="admin-stat-icon">⚽</div>
+            <div class="admin-stat-val">2</div>
+            <div class="admin-stat-label">Próx. Partidas</div>
+          </div>
+        </div>
+
+        <div style="font-size:15px; font-weight:700; margin-bottom:12px;">Ações rápidas</div>
+        <div class="admin-action-list">
+          <div class="admin-action" onclick="openModal('add-match-modal')">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">➕</div>
+              <div>
+                <div class="admin-action-title">Cadastrar partida</div>
+                <div class="admin-action-sub">Adicionar jogo à rodada atual</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow">›</div>
+          </div>
+          <div class="admin-action" onclick="openModal('result-modal')">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">🏁</div>
+              <div>
+                <div class="admin-action-title">Informar resultado</div>
+                <div class="admin-action-sub">Placar oficial · calcular pontos</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow">›</div>
+          </div>
+          <div class="admin-action" onclick="switchTab('pagamentos')">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">💳</div>
+              <div>
+                <div class="admin-action-title">Aprovar pagamentos</div>
+                <div class="admin-action-sub">3 comprovantes aguardando</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow" style="color:var(--warning);">● 3</div>
+          </div>
+          <div class="admin-action" onclick="openModal('invite-modal')">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">🔗</div>
+              <div>
+                <div class="admin-action-title">Convidar participantes</div>
+                <div class="admin-action-sub">Link · QR Code · Código</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow">›</div>
+          </div>
+          <div class="admin-action" onclick="openModal('rules-modal')">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">⚙️</div>
+              <div>
+                <div class="admin-action-title">Configurar regras</div>
+                <div class="admin-action-sub">Pontuação · valor · acúmulo</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow">›</div>
+          </div>
+          <div class="admin-action">
+            <div class="admin-action-left">
+              <div class="admin-action-icon">📊</div>
+              <div>
+                <div class="admin-action-title">Exportar relatório</div>
+                <div class="admin-action-sub">CSV ou PDF da rodada</div>
+              </div>
+            </div>
+            <div class="admin-action-arrow">›</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; font-size:15px; font-weight:700; margin-bottom:12px;">Aprovação de pagamentos</div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div class="payment-item" style="align-items:flex-start; flex-direction:column; gap:10px;">
+            <div style="display:flex; width:100%; justify-content:space-between; align-items:center;">
+              <div class="payment-item-left">
+                <div class="payment-avatar" style="background:rgba(52,152,219,0.2); color:#7ab;">RF</div>
+                <div><div class="payment-name">Rafael Figueiredo</div><div class="payment-round">Rodada 8 · R$20 · 19/Jun 14h32</div></div>
+              </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.04); border-radius:8px; padding:10px; width:100%;">
+              <div style="font-size:11px; color:var(--texto2); margin-bottom:6px;">Comprovante enviado:</div>
+              <div style="font-size:12px; color:var(--info);">📎 comprovante_rafael.jpg</div>
+            </div>
+            <div style="display:flex; gap:8px; width:100%;">
+              <button class="btn-sm" style="flex:1; background:var(--success); color:#fff;" onclick="showToast('✅ Pagamento aprovado!')">✓ Aprovar</button>
+              <button class="btn-sm" style="flex:1; background:var(--danger); color:#fff;" onclick="showToast('❌ Pagamento rejeitado.')">✗ Rejeitar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottomnav">
+    <button class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Início
+    </button>
+    <button class="nav-item" id="nav-partidas" onclick="switchTab('partidas')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      Partidas
+    </button>
+    <button class="nav-item" id="nav-ranking" onclick="switchTab('ranking')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.5 21H2V9h5.5v12zm7.25-18h-5.5v18h5.5V3zM22 11h-5.5v10H22V11z"/></svg>
+      Ranking
+    </button>
+    <button class="nav-item" id="nav-grupos" onclick="switchTab('grupos')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      Grupos
+    </button>
+    <button class="nav-item" id="nav-pagamentos" onclick="switchTab('pagamentos')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+      Pagamentos
+    </button>
+  </nav>
+</div>
+
+<!-- ============================== MODALS ============================== -->
+
+<!-- BET MODAL -->
+<div class="modal-overlay" id="bet-modal" onclick="closeModal(event, 'bet-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Dar Palpite</h2>
+    <div class="bet-match-header">
+      <div class="bet-league-info">🏆 Brasileirão Série A · Rodada 8</div>
+      <div class="bet-teams">
+        <div class="bet-team">
+          <div class="bet-shield">🔴</div>
+          <div class="bet-team-name">Fluminense</div>
+        </div>
+        <div class="bet-vs">VS</div>
+        <div class="bet-team">
+          <div class="bet-shield">🔵</div>
+          <div class="bet-team-name">Botafogo</div>
+        </div>
+      </div>
+      <div class="bet-datetime">Sábado, 22 de Junho · 16h00 · Maracanã</div>
+    </div>
+    <div class="bet-deadline-bar">⏱ Prazo para palpitar: <strong>1h 23min</strong></div>
+    <div class="score-input-area">
+      <div class="score-input-label">Qual será o placar?</div>
+      <div class="score-inputs">
+        <div class="score-input-group">
+          <div class="score-input-name">Flu</div>
+          <div class="score-number">
+            <button class="score-btn" onclick="changeScore('home', -1)">−</button>
+            <div class="score-display" id="score-home">2</div>
+            <button class="score-btn" onclick="changeScore('home', 1)">+</button>
+          </div>
+        </div>
+        <div class="score-x">X</div>
+        <div class="score-input-group">
+          <div class="score-input-name">Bot</div>
+          <div class="score-number">
+            <button class="score-btn" onclick="changeScore('away', -1)">−</button>
+            <div class="score-display" id="score-away">1</div>
+            <button class="score-btn" onclick="changeScore('away', 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="form-submit" onclick="submitBet()">⚽ Confirmar palpite</button>
+  </div>
+</div>
+
+<!-- NOTIFY MODAL -->
+<div class="modal-overlay" id="notify-modal" onclick="closeModal(event, 'notify-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Notificações</h2>
+    <div style="display:flex; flex-direction:column; gap:10px; margin-top:4px;">
+      <div style="padding:12px; background:rgba(57,212,106,0.08); border:1px solid rgba(57,212,106,0.2); border-radius:var(--radius-sm);">
+        <div style="font-size:13px; font-weight:600; color:var(--verde-neon); margin-bottom:3px;">✅ Palpite confirmado!</div>
+        <div style="font-size:12px; color:var(--texto2);">Flu 2x1 Bot · Rodada 8 · agora há pouco</div>
+      </div>
+      <div style="padding:12px; background:rgba(201,162,39,0.08); border:1px solid rgba(201,162,39,0.2); border-radius:var(--radius-sm);">
+        <div style="font-size:13px; font-weight:600; color:var(--ouro-light); margin-bottom:3px;">⏰ Prazo se encerrando!</div>
+        <div style="font-size:12px; color:var(--texto2);">Flu x Fla · Você ainda não palpitou · Fecha em 22h</div>
+      </div>
+      <div style="padding:12px; background:var(--escuro3); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-sm);">
+        <div style="font-size:13px; font-weight:600; margin-bottom:3px;">🏆 Resultado da rodada 7!</div>
+        <div style="font-size:12px; color:var(--texto2);">Você ficou em 3° lugar · +5 pontos · R$40 ganhos</div>
+      </div>
+      <div style="padding:12px; background:var(--escuro3); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-sm);">
+        <div style="font-size:13px; font-weight:600; margin-bottom:3px;">💳 Pagamento aprovado</div>
+        <div style="font-size:12px; color:var(--texto2);">Rodada 8 · R$20 aprovado pelo admin · Ontem</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MATCH MODAL -->
+<div class="modal-overlay" id="add-match-modal" onclick="closeModal(event, 'add-match-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Cadastrar Partida</h2>
+    <div class="form-group">
+      <label class="form-label">Time Mandante</label>
+      <input class="form-input" placeholder="Ex: Fluminense" value="Fluminense">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Time Visitante</label>
+      <input class="form-input" placeholder="Ex: Botafogo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Campeonato</label>
+      <select class="form-input" style="appearance:none;">
+        <option>Brasileirão Série A</option>
+        <option>Copa do Brasil</option>
+        <option>Libertadores</option>
+        <option>Carioca</option>
+      </select>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="form-group">
+        <label class="form-label">Data</label>
+        <input class="form-input" type="date" value="2025-06-22">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Horário</label>
+        <input class="form-input" type="time" value="16:00">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Prazo limite para palpites</label>
+      <input class="form-input" type="datetime-local" value="2025-06-22T15:00">
+    </div>
+    <button class="form-submit" onclick="showToast('⚽ Partida cadastrada!'); closeModal2('add-match-modal')">Cadastrar partida</button>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div class="modal-overlay" id="result-modal" onclick="closeModal(event, 'result-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Informar Resultado</h2>
+    <div class="bet-match-header" style="margin-bottom:16px;">
+      <div class="bet-league-info">Brasileirão Série A · Rodada 8</div>
+      <div class="bet-teams">
+        <div class="bet-team"><div class="bet-shield">🔴</div><div class="bet-team-name">Fluminense</div></div>
+        <div class="bet-vs">VS</div>
+        <div class="bet-team"><div class="bet-shield">🔵</div><div class="bet-team-name">Botafogo</div></div>
+      </div>
+    </div>
+    <div class="score-input-area">
+      <div class="score-input-label">Placar oficial (tempo regulamentar)</div>
+      <div class="score-inputs">
+        <div class="score-input-group">
+          <div class="score-input-name">Flu</div>
+          <div class="score-number">
+            <button class="score-btn" onclick="changeScore2('res-home', -1)">−</button>
+            <div class="score-display" id="res-home">0</div>
+            <button class="score-btn" onclick="changeScore2('res-home', 1)">+</button>
+          </div>
+        </div>
+        <div class="score-x">X</div>
+        <div class="score-input-group">
+          <div class="score-input-name">Bot</div>
+          <div class="score-number">
+            <button class="score-btn" onclick="changeScore2('res-away', -1)">−</button>
+            <div class="score-display" id="res-away">0</div>
+            <button class="score-btn" onclick="changeScore2('res-away', 1)">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(243,156,18,0.08); border:1px solid rgba(243,156,18,0.2); border-radius:var(--radius-sm); padding:12px; margin-bottom:16px; font-size:12px; color:var(--warning);">
+      ⚠️ Esta ação é irreversível e vai calcular os pontos de todos os palpitadores automaticamente.
+    </div>
+    <button class="form-submit" style="background:var(--verde);" onclick="showToast('🏆 Resultado registrado! Pontos calculados.'); closeModal2('result-modal')">Confirmar resultado oficial</button>
+  </div>
+</div>
+
+<!-- NEW GROUP MODAL -->
+<div class="modal-overlay" id="new-group-modal" onclick="closeModal(event, 'new-group-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Criar Grupo</h2>
+    <div class="form-group">
+      <label class="form-label">Nome do grupo</label>
+      <input class="form-input" placeholder="Ex: Bolão da Resenha">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descrição</label>
+      <input class="form-input" placeholder="Descreva as regras gerais do grupo">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Valor por rodada (R$)</label>
+      <input class="form-input" type="number" placeholder="20" value="20">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Chave Pix</label>
+      <input class="form-input" placeholder="E-mail, CPF ou telefone">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Acumular prêmio sem vencedor?</label>
+      <div style="display:flex; gap:10px; margin-top:6px;">
+        <button class="btn-sm" id="acum-sim" style="flex:1; background:var(--verde); color:#fff;" onclick="setAcum(true)">Sim</button>
+        <button class="btn-sm" id="acum-nao" style="flex:1; background:var(--escuro4); color:var(--texto2); border:1px solid rgba(255,255,255,0.1);" onclick="setAcum(false)">Não</button>
+      </div>
+    </div>
+    <button class="form-submit" onclick="showToast('🎉 Grupo criado! Código: FLUSÃO99'); closeModal2('new-group-modal')">Criar grupo</button>
+  </div>
+</div>
+
+<!-- INVITE MODAL -->
+<div class="modal-overlay" id="invite-modal" onclick="closeModal(event, 'invite-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Convidar Participantes</h2>
+    <div style="text-align:center; padding:24px 0;">
+      <div style="background:var(--escuro3); border:2px solid rgba(57,212,106,0.3); border-radius:var(--radius); padding:20px; margin-bottom:16px;">
+        <div style="font-size:11px; color:var(--texto2); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px;">Código do grupo</div>
+        <div style="font-family:'Bebas Neue'; font-size:48px; color:var(--verde-neon); letter-spacing:8px;">FLUSÃO23</div>
+      </div>
+      <!-- QR Code placeholder -->
+      <div style="background:white; border-radius:var(--radius-sm); padding:16px; display:inline-block; margin-bottom:16px;">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <rect width="120" height="120" fill="white"/>
+          <!-- QR pattern simplificado -->
+          <rect x="10" y="10" width="40" height="40" fill="#111" rx="2"/>
+          <rect x="15" y="15" width="30" height="30" fill="white" rx="1"/>
+          <rect x="20" y="20" width="20" height="20" fill="#111" rx="1"/>
+          <rect x="70" y="10" width="40" height="40" fill="#111" rx="2"/>
+          <rect x="75" y="15" width="30" height="30" fill="white" rx="1"/>
+          <rect x="80" y="20" width="20" height="20" fill="#111" rx="1"/>
+          <rect x="10" y="70" width="40" height="40" fill="#111" rx="2"/>
+          <rect x="15" y="75" width="30" height="30" fill="white" rx="1"/>
+          <rect x="20" y="80" width="20" height="20" fill="#111" rx="1"/>
+          <rect x="55" y="55" width="8" height="8" fill="#111"/>
+          <rect x="65" y="55" width="8" height="8" fill="#111"/>
+          <rect x="75" y="55" width="8" height="8" fill="#111"/>
+          <rect x="55" y="65" width="8" height="8" fill="#111"/>
+          <rect x="55" y="75" width="8" height="8" fill="#111"/>
+          <rect x="65" y="75" width="8" height="8" fill="#111"/>
+          <rect x="75" y="65" width="8" height="8" fill="#111"/>
+          <rect x="85" y="75" width="8" height="8" fill="#111"/>
+          <rect x="95" y="55" width="8" height="8" fill="#111"/>
+          <rect x="95" y="75" width="8" height="8" fill="#111"/>
+        </svg>
+      </div>
+      <div style="font-size:12px; color:var(--texto2); margin-bottom:16px;">Escaneie para entrar no grupo</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-primary" style="flex:1; justify-content:center;" onclick="showToast('🔗 Link copiado!')">Copiar link</button>
+      <button class="btn-secondary" style="flex:1; justify-content:center;" onclick="showToast('📤 Compartilhando...')">Compartilhar</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPROVANTE MODAL -->
+<div class="modal-overlay" id="comprovante-modal" onclick="closeModal(event, 'comprovante-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Enviar Comprovante</h2>
+    <div style="background:var(--escuro3); border-radius:var(--radius); padding:14px 16px; margin-bottom:16px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+        <span style="font-size:12px; color:var(--texto2);">Valor da rodada</span>
+        <span style="font-size:14px; font-weight:700; color:var(--verde-neon);">R$ 20,00</span>
+      </div>
+      <div style="display:flex; justify-content:space-between;">
+        <span style="font-size:12px; color:var(--texto2);">Chave Pix</span>
+        <span style="font-size:13px; font-weight:600;">joao.oliveira@email.com</span>
+      </div>
+    </div>
+    <div class="upload-area" onclick="showToast('📷 Abrindo câmera...')">
+      <div class="upload-icon">📎</div>
+      <div class="upload-text">Toque para enviar comprovante</div>
+      <div class="upload-sub">Foto, screenshot ou PDF</div>
+    </div>
+    <button class="form-submit" style="margin-top:16px; background:var(--verde);" onclick="showToast('✅ Comprovante enviado! Aguardando aprovação.'); closeModal2('comprovante-modal')">Enviar comprovante</button>
+  </div>
+</div>
+
+<!-- RULES MODAL -->
+<div class="modal-overlay" id="rules-modal" onclick="closeModal(event, 'rules-modal')">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-handle"></div>
+    <h2 class="modal-title">Regras de Pontuação</h2>
+    <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Placar exato (pontos)</label>
+        <input class="form-input" type="number" value="5">
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Acertar vencedor ou empate</label>
+        <input class="form-input" type="number" value="2">
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Acertar gols de um time (+bônus)</label>
+        <input class="form-input" type="number" value="1">
+      </div>
+      <div class="form-group" style="margin:0;">
+        <label class="form-label">Rodada perfeita (todos exatos)</label>
+        <input class="form-input" type="number" value="3">
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div style="font-size:13px; font-weight:700; margin-bottom:10px;">Distribuição do prêmio</div>
+    <div class="form-group">
+      <label class="form-label">Regra de rateio</label>
+      <select class="form-input" style="appearance:none;">
+        <option>Dividir igualmente entre vencedores</option>
+        <option>Maior pontuação leva tudo</option>
+        <option>Top 3 (60% / 30% / 10%)</option>
+      </select>
+    </div>
+    <button class="form-submit" style="background:var(--verde);" onclick="showToast('✅ Regras salvas!'); closeModal2('rules-modal')">Salvar regras</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // STATE
+  const scores = { home: 2, away: 1 };
+  const scores2 = { 'res-home': 0, 'res-away': 0 };
+
+  // NAVIGATION
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) el.classList.add('active');
+  }
+
+  function doLogin() {
+    showScreen('app');
+  }
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const content = document.getElementById('tab-' + tab);
+    if (content) content.style.display = 'block';
+    const nav = document.getElementById('nav-' + tab);
+    if (nav) nav.classList.add('active');
+    // scroll to top
+    document.getElementById('main-content').scrollTop = 0;
+  }
+
+  function authTab(tab) {
+    document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+    document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  }
+
+  // MODALS
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function closeModal(event, id) {
+    if (event.target === event.currentTarget) {
+      document.getElementById(id).classList.remove('open');
+    }
+  }
+  function closeModal2(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // SCORE INPUTS
+  function changeScore(team, delta) {
+    scores[team] = Math.max(0, scores[team] + delta);
+    document.getElementById('score-' + team).textContent = scores[team];
+  }
+  function changeScore2(id, delta) {
+    scores2[id] = Math.max(0, scores2[id] + delta);
+    document.getElementById(id).textContent = scores2[id];
+  }
+
+  // BET SUBMIT
+  function submitBet() {
+    closeModal2('bet-modal');
+    showToast('⚽ Palpite ' + scores.home + 'x' + scores.away + ' confirmado!');
+  }
+
+  // TOAST
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  // ACUM
+  function setAcum(val) {
+    document.getElementById('acum-sim').style.background = val ? 'var(--verde)' : 'var(--escuro4)';
+    document.getElementById('acum-sim').style.color = val ? '#fff' : 'var(--texto2)';
+    document.getElementById('acum-nao').style.background = !val ? 'var(--grenà)' : 'var(--escuro4)';
+    document.getElementById('acum-nao').style.color = !val ? '#fff' : 'var(--texto2)';
+  }
+
+  // CHIP TABS (visual only)
+  document.querySelectorAll('.chip-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.closest('.chip-tabs').querySelectorAll('.chip-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
